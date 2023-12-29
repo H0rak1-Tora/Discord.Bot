@@ -21,7 +21,7 @@ async def on_ready():
 
 @bot.slash_command(name="create_event", description="Создание события.")
 async def event(ctx):
-    await main_event(ctx)
+    await main_event(ctx, bot)
 
 
 @bot.slash_command(name="buttons", description="Проверка работы кнопок.")
@@ -36,7 +36,7 @@ async def info(ctx):
 
 @bot.slash_command()
 async def give_role(ctx, role: disnake.Role, member: disnake.Member):
-    await main_give_role(ctx, role, member)
+    await main_give_role(ctx, role, member, bot)
 
 
 @bot.slash_command(name="fun", description="Очень фановая команда!")
@@ -51,7 +51,7 @@ async def help_listener(inter: disnake.MessageInteraction):
 
 @bot.slash_command(name="nah", description="Элегантно посылает человека!")
 async def nah(ctx, member: disnake.Member):
-    await nah1(ctx, member)
+    await nah1(ctx, member, bot)
 
 
 @bot.event

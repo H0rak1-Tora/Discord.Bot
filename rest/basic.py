@@ -13,6 +13,19 @@ Intents.message_content = True
 # Здесь находятся все габоритные блоки кода.
 
 
+async def debug(ctx, bot, command):
+    if config.debug:
+        author_name = ctx.author.name
+        guild_name = ctx.guild.name if ctx.guild else "Direct Message"
+        channel_name = ctx.channel.name if ctx.guild else "Direct Message"
+        current_time = datetime.datetime.now().strftime("%m-%d-%Y %H:%M:%S")
+        debug_info = (f"{current_time}: \"{guild_name}\"|{channel_name}|{author_name}|{command}|"
+                      f"Ping:{float(bot.latency * 1000)}ms")
+        print(debug_info)
+    else:
+        pass
+
+
 async def event_modal(inter, channel):
     class EventModal(disnake.ui.Modal):
         def __init__(self):
@@ -90,7 +103,8 @@ async def event_modal(inter, channel):
     await inter.response.send_modal(modal=EventModal())
 
 
-async def main_event(ctx):
+async def main_event(ctx, bot):
+    command_name = "create_event"
     if isinstance(ctx.channel, disnake.TextChannel):
         # Если команда вызвана на сервере
         await ctx.send("Эта команда работает только в личных сообщениях.", ephemeral=True)
@@ -109,6 +123,7 @@ async def main_event(ctx):
             color=0x18f2b2,
         )
         await ctx.send(embed=embed_test, view=view)
+        await debug(ctx, bot, command=command_name)
 
 
 async def main_on_dropdown_event(inter, bot):
@@ -134,6 +149,7 @@ async def main_on_dropdown_event(inter, bot):
 
 
 async def conclusion_info(ctx, bot):
+    command_name = "info"
     if isinstance(ctx.channel, disnake.TextChannel):
         embed_info = disnake.Embed(
             title="Information",
@@ -147,8 +163,7 @@ async def conclusion_info(ctx, bot):
         embed_info.add_field(name='Встроенный заголовок', value="Встроенное значение", inline=True)
         embed_info.add_field(name="Встроенный заголовок", value="Встроенное значение", inline=True)
         await ctx.send(embed=embed_info)
-        if config.debug:
-            await ctx.send(f"Ping: {float(bot.latency * 1000)}ms")
+        await debug(ctx, bot, command=command_name)
     else:
         # Если команда вызвана в личных сообщениях
         await ctx.send("Эта команда работает только на сервере.", ephemeral=True)
@@ -161,13 +176,15 @@ async def command_buttons(inter):
     )
 
 
-async def main_give_role(ctx, role, member):
+async def main_give_role(ctx, role, member, bot):
+    command_name = "give_role"
     if isinstance(ctx.channel, disnake.TextChannel):
         try:
             await member.add_roles(role)
             await ctx.send(f'{member.mention}, Вы получили роль {role.name}')
         except disnake.Forbidden:
             await ctx.send("У меня нет прав для выдачи этой роли.")
+        await debug(ctx, bot, command=command_name)
     else:
         # Если команда вызвана в личных сообщениях
         await ctx.send("Эта команда работает только на сервере.", ephemeral=True)
@@ -216,7 +233,8 @@ async def reg_activation_buttons(inter):
         await inter.response.send_message(embed=embed_fun2)
 
 
-async def nah1(ctx, member):
+async def nah1(ctx, member, bot):
+    command_name = "nah"
     if isinstance(ctx.channel, disnake.TextChannel):
         embed_nah1 = disnake.Embed(
             description=f"{ctx.author.mention} элегантно посылает тебя",
@@ -226,6 +244,7 @@ async def nah1(ctx, member):
         await ctx.send(f"Хей, {member.mention}!")
         await ctx.send(embed=embed_nah1)
         await ctx.send(f"Гордитесь собой, вы элегантно послали {member.mention}", ephemeral=True)
+        await debug(ctx, bot, command=command_name)
     else:
         # Если команда вызвана в личных сообщениях
         await ctx.send("Эта команда работает только на сервере.", ephemeral=True)
