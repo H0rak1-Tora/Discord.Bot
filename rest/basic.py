@@ -85,30 +85,32 @@ async def event_modal(inter, channel):
                                                               f"Продолжительность: {int(thentime)} минут.\n"
                                                               f"Конец: {time_string_last}.\n", inline=False)
             embed_event.add_field(name="Описание события:", value=f'{eventdescription} ', inline=True)
-    #        embed_sending_user_information_about_the_created_event = disnake.Embed()
+#            embed_sending_user_information_about_the_created_event = disnake.Embed()
             await channel.send(embed=embed_event)
 
     await inter.response.send_modal(modal=EventModal())
 
 
-async def main_choose_server(ctx):
-    select_options = [
-        disnake.SelectOption(label="SMTHouse - Умный Дом", value="ID_SERVER_1"),
-        disnake.SelectOption(label="Chill zone", value="ID_SERVER_2"),
-    ]
-    select = disnake.ui.Select(placeholder="Выберите сервер", options=select_options)
-    view = disnake.ui.View()
-    view.add_item(select)
+async def main_event(ctx):
+    if
 
-    embed_test = disnake.Embed(
-        title="Панель упровления.",
-        description="Тестовый вариант панели упровления ботом.",
-        color=0x18f2b2,
-    )
-    await ctx.send(embed=embed_test, view=view)
+        select_options = [
+            disnake.SelectOption(label="SMTHouse - Умный Дом", value="ID_SERVER_1"),
+            disnake.SelectOption(label="Chill zone", value="ID_SERVER_2"),
+        ]
+        select = disnake.ui.Select(placeholder="Выберите сервер", options=select_options)
+        view = disnake.ui.View()
+        view.add_item(select)
+
+        embed_test = disnake.Embed(
+            title="Панель упровления.",
+            description="Тестовый вариант панели упровления ботом.",
+            color=0x18f2b2,
+        )
+        await ctx.send(embed=embed_test, view=view)
 
 
-async def main_on_dropdown(inter, bot):
+async def main_on_dropdown_event(inter, bot):
     # Получение значения, выбранного в меню
     selected_value = inter.data['values'][0]
 
@@ -122,6 +124,12 @@ async def main_on_dropdown(inter, bot):
         guild = bot.get_guild(config.server2)
         channel = guild.get_channel(config.channel2)
         await event_modal(inter, channel)
+
+        async for message in inter.author.history(limit=None):
+            try:
+                await message.delete()
+            except disnake.NotFound:
+                pass  # Обрабатываем случай, если сообщение уже было удалено или не найдено
 
 
 async def conclusion_info(ctx, bot):
@@ -139,6 +147,13 @@ async def conclusion_info(ctx, bot):
     await ctx.send(embed=embed_info)
     if config.debug:
         await ctx.send(f"Ping: {float(bot.latency * 1000)}ms")
+
+
+async def command_buttons(inter):
+    await inter.response.send_message("Need help?", components=[
+            disnake.ui.Button(label="Info", style=disnake.ButtonStyle.secondary, custom_id="yes")
+        ],
+    )
 
 
 async def main_give_role(ctx, role, member):

@@ -19,17 +19,14 @@ async def on_ready():
     print(f'Готов к работе как - {bot.user}')
 
 
-@bot.slash_command(guild_ids=None)
-async def choose_server(ctx):
-    await main_choose_server(ctx)
+@bot.slash_command(name="create_event", description="Создание события.")
+async def event(ctx):
+    await main_event(ctx)
 
 
 @bot.slash_command(name="buttons", description="Проверка работы кнопок.")
 async def buttons(inter: disnake.ApplicationCommandInteraction):
-    await inter.response.send_message("Need help?", components=[
-            disnake.ui.Button(label="Info", style=disnake.ButtonStyle.secondary, custom_id="yes")
-        ],
-    )
+    await command_buttons(inter)
 
 
 @bot.slash_command(name="info", description="Отправляет краткую информацию о сервере.")
@@ -59,7 +56,7 @@ async def nah(ctx, member: disnake.Member):
 
 @bot.event
 async def on_dropdown(inter):
-    await main_on_dropdown(inter, bot)
+    await main_on_dropdown_event(inter, bot)
 
 
 # @bot.event
