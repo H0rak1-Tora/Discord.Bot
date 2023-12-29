@@ -1,0 +1,203 @@
+import disnake
+import datetime
+# import time
+import pytz
+
+from rest import config
+
+from disnake import (Intents, ModalInteraction)
+from disnake import TextInputStyle
+
+intents = disnake.Intents(messages=True, guilds=True)
+Intents.message_content = True
+
+# Здесь находятся все габоритные блоки кода.
+
+
+async def event_modal(inter, channel):
+    class EventModal(disnake.ui.Modal):
+        def __init__(self):
+            components = [
+                disnake.ui.TextInput(
+                    label="Как называется соботие.",
+                    placeholder="Название события.",
+                    custom_id="EventName",
+                    style=TextInputStyle.short,
+                    max_length=35,
+                ),
+                disnake.ui.TextInput(
+                    label="Через сколько начнётся",
+                    placeholder="Писать в минутах, только число.",
+                    custom_id="Time",
+                    style=TextInputStyle.short,
+                    max_length=3,
+                ),
+                disnake.ui.TextInput(
+                    label="Сколько будет продолжаться",
+                    placeholder="Писать в минутах, только число.",
+                    custom_id="ThenTime",
+                    style=TextInputStyle.short,
+                    max_length=5,
+                ),
+                disnake.ui.TextInput(
+                    label="Описание.",
+                    placeholder="Описание того что буден происходить во время события.",
+                    custom_id="EventDescription",
+                    style=TextInputStyle.paragraph,
+                    max_length=1000,
+                ),
+            ]
+            super().__init__(
+                title="Создание ивента.",
+                custom_id="event",
+                timeout=300,
+                components=components,
+            )
+
+        async def callback(self, interactoin: ModalInteraction) -> None:
+            time_even = interactoin.text_values["Time"]
+            eventname = interactoin.text_values["EventName"]
+            thentime = interactoin.text_values["ThenTime"]
+            eventdescription = interactoin.text_values["EventDescription"]
+            tz = pytz.timezone('Europe/Moscow')
+
+            # Вычисляем время события относительно текущего времени и вычисляем конец события
+            event_time = (datetime.datetime.now(tz) +
+                          datetime.timedelta(minutes=int(time_even)))
+            event_time_last = (datetime.datetime.now(tz) +
+                               datetime.timedelta(minutes=int(time_even)) +
+                               datetime.timedelta(minutes=int(thentime)))
+
+            # Генерируем строки в формате <t:timestamp:R>
+            timestamp = int(event_time.timestamp())
+            timestamplast = int(event_time_last.timestamp())
+            time_string = f'<t:{timestamp}:R>'
+            time_string_last = f'<t:{timestamplast}:R>'
+
+            # Формируем embed
+            embed_event = disnake.Embed(
+                title="Внимание!!! Событие на подходе.",
+                description=f"{interactoin.author.mention} объявляет событие:",
+                color=0x18f2b2,
+
+            )
+            embed_event.add_field(name=f"{eventname}:", value=f"Начало: {time_string}.\n"
+                                                              f"Продолжительность: {int(thentime)} минут.\n"
+                                                              f"Конец: {time_string_last}.\n", inline=False)
+            embed_event.add_field(name="Описание события:", value=f'{eventdescription} ', inline=True)
+    #        embed_sending_user_information_about_the_created_event = disnake.Embed()
+            await channel.send(embed=embed_event)
+
+    await inter.response.send_modal(modal=EventModal())
+
+
+async def main_choose_server(ctx):
+    select_options = [
+        disnake.SelectOption(label="SMTHouse - Умный Дом", value="ID_SERVER_1"),
+        disnake.SelectOption(label="Chill zone", value="ID_SERVER_2"),
+    ]
+    select = disnake.ui.Select(placeholder="Выберите сервер", options=select_options)
+    view = disnake.ui.View()
+    view.add_item(select)
+
+    embed_test = disnake.Embed(
+        title="Панель упровления.",
+        description="Тестовый вариант панели упровления ботом.",
+        color=0x18f2b2,
+    )
+    await ctx.send(embed=embed_test, view=view)
+
+
+async def main_on_dropdown(inter, bot):
+    # Получение значения, выбранного в меню
+    selected_value = inter.data['values'][0]
+
+    # Сообщение, отправляемое в определенный канал сервера в зависимости от выбранного значения
+    if selected_value == "ID_SERVER_1":
+        guild = bot.get_guild(config.server1)
+        channel = guild.get_channel(config.channel1)
+        await event_modal(inter, channel)
+
+    elif selected_value == "ID_SERVER_2":
+        guild = bot.get_guild(config.server2)
+        channel = guild.get_channel(config.channel2)
+        await event_modal(inter, channel)
+
+
+async def conclusion_info(ctx, bot):
+    embed_info = disnake.Embed(
+        title="Information",
+        description="This is some information.",
+        color=0x18f2b2,
+    )
+    # embed_info.set_thumbnail(file=disnake.File(r"photo\list.png"))
+    embed_info.set_image(url="https://i.playground.ru/p/SWFyLtCnYduJ-KsOL5Tqag.png")
+    embed_info.add_field(name="<t:1704056399:R>", value="Обычное значение", inline=False)
+    embed_info.add_field(name="Встроенный заголовок", value='Встроенное значение', inline=True)
+    embed_info.add_field(name='Встроенный заголовок', value="Встроенное значение", inline=True)
+    embed_info.add_field(name="Встроенный заголовок", value="Встроенное значение", inline=True)
+    await ctx.send(embed=embed_info)
+    if config.debug:
+        await ctx.send(f"Ping: {float(bot.latency * 1000)}ms")
+
+
+async def main_give_role(ctx, role, member):
+    try:
+        await member.add_roles(role)
+        await ctx.send(f'{member.mention}, Вы получили роль {role.name}')
+    except disnake.Forbidden:
+        await ctx.send("У меня нет прав для выдачи этой роли.")
+
+
+async def fun_panel(inter):
+    embed_fun_panel = disnake.Embed(
+        title="Фан панелька.",
+        description="Тут ты выбераешь фановую кнопочку.",
+        color=0x18f2b2,
+    )
+    await inter.response.send_message(
+        embed=embed_fun_panel,
+        components=[
+            disnake.ui.Button(label="UwU", style=disnake.ButtonStyle.success, custom_id="fun1"),
+            disnake.ui.Button(label="Gigachad", style=disnake.ButtonStyle.success, custom_id="fun2"),
+        ],
+    )
+
+
+#    if inter.component.custom_id == "fun3":
+#       await inter.response.send_message(embed_fun3)
+
+#    if inter.component.custom_id == "fun4":
+#        await inter.response.send_message(embed_fun4)
+
+
+async def reg_activation_buttons(inter):
+    if inter.component.custom_id not in ["fun1", "fun2"]:
+        return
+
+    if inter.component.custom_id == "fun1":
+        embed_fun1 = disnake.Embed(
+            title="ММММмммммм......",
+            color=0x18f2b2,
+        )
+        embed_fun1.add_field(name="", value=config.embed_fan1, inline=True)
+        await inter.response.send_message(embed=embed_fun1)
+
+    if inter.component.custom_id == "fun2":
+        embed_fun2 = disnake.Embed(
+            description="GIGACHAD",
+            color=0x18f2b2,
+        )
+        embed_fun2.add_field(name="", value=config.embed_fan2, inline=True)
+        await inter.response.send_message(embed=embed_fun2)
+
+
+async def nah1(ctx, member):
+    embed_nah1 = disnake.Embed(
+        description=f"{ctx.author.mention} элегантно посылает тебя",
+        color=0x18f2b2,
+    )
+    embed_nah1.add_field(name="НАФИГ", value="Иди и не спотыкайся.", inline=False)
+    await ctx.send(f"Хей, {member.mention}!")
+    await ctx.send(embed=embed_nah1)
+    await ctx.send(f"Гордитесь собой, вы элегантно послали {member.mention}", ephemeral=True)
