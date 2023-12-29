@@ -10,7 +10,6 @@ from disnake import TextInputStyle
 
 intents = disnake.Intents(messages=True, guilds=True)
 Intents.message_content = True
-
 # Здесь находятся все габоритные блоки кода.
 
 
@@ -92,8 +91,10 @@ async def event_modal(inter, channel):
 
 
 async def main_event(ctx):
-    if
-
+    if isinstance(ctx.channel, disnake.TextChannel):
+        # Если команда вызвана на сервере
+        await ctx.send("Эта команда работает только в личных сообщениях.", ephemeral=True)
+    else:
         select_options = [
             disnake.SelectOption(label="SMTHouse - Умный Дом", value="ID_SERVER_1"),
             disnake.SelectOption(label="Chill zone", value="ID_SERVER_2"),
@@ -133,20 +134,24 @@ async def main_on_dropdown_event(inter, bot):
 
 
 async def conclusion_info(ctx, bot):
-    embed_info = disnake.Embed(
-        title="Information",
-        description="This is some information.",
-        color=0x18f2b2,
-    )
-    # embed_info.set_thumbnail(file=disnake.File(r"photo\list.png"))
-    embed_info.set_image(url="https://i.playground.ru/p/SWFyLtCnYduJ-KsOL5Tqag.png")
-    embed_info.add_field(name="<t:1704056399:R>", value="Обычное значение", inline=False)
-    embed_info.add_field(name="Встроенный заголовок", value='Встроенное значение', inline=True)
-    embed_info.add_field(name='Встроенный заголовок', value="Встроенное значение", inline=True)
-    embed_info.add_field(name="Встроенный заголовок", value="Встроенное значение", inline=True)
-    await ctx.send(embed=embed_info)
-    if config.debug:
-        await ctx.send(f"Ping: {float(bot.latency * 1000)}ms")
+    if isinstance(ctx.channel, disnake.TextChannel):
+        embed_info = disnake.Embed(
+            title="Information",
+            description="This is some information.",
+            color=0x18f2b2,
+        )
+        # embed_info.set_thumbnail(file=disnake.File(r"photo\list.png"))
+        embed_info.set_image(url="https://i.playground.ru/p/SWFyLtCnYduJ-KsOL5Tqag.png")
+        embed_info.add_field(name="<t:1704056399:R>", value="Обычное значение", inline=False)
+        embed_info.add_field(name="Встроенный заголовок", value='Встроенное значение', inline=True)
+        embed_info.add_field(name='Встроенный заголовок', value="Встроенное значение", inline=True)
+        embed_info.add_field(name="Встроенный заголовок", value="Встроенное значение", inline=True)
+        await ctx.send(embed=embed_info)
+        if config.debug:
+            await ctx.send(f"Ping: {float(bot.latency * 1000)}ms")
+    else:
+        # Если команда вызвана в личных сообщениях
+        await ctx.send("Эта команда работает только на сервере.", ephemeral=True)
 
 
 async def command_buttons(inter):
@@ -157,11 +162,15 @@ async def command_buttons(inter):
 
 
 async def main_give_role(ctx, role, member):
-    try:
-        await member.add_roles(role)
-        await ctx.send(f'{member.mention}, Вы получили роль {role.name}')
-    except disnake.Forbidden:
-        await ctx.send("У меня нет прав для выдачи этой роли.")
+    if isinstance(ctx.channel, disnake.TextChannel):
+        try:
+            await member.add_roles(role)
+            await ctx.send(f'{member.mention}, Вы получили роль {role.name}')
+        except disnake.Forbidden:
+            await ctx.send("У меня нет прав для выдачи этой роли.")
+    else:
+        # Если команда вызвана в личных сообщениях
+        await ctx.send("Эта команда работает только на сервере.", ephemeral=True)
 
 
 async def fun_panel(inter):
@@ -208,11 +217,15 @@ async def reg_activation_buttons(inter):
 
 
 async def nah1(ctx, member):
-    embed_nah1 = disnake.Embed(
-        description=f"{ctx.author.mention} элегантно посылает тебя",
-        color=0x18f2b2,
-    )
-    embed_nah1.add_field(name="НАФИГ", value="Иди и не спотыкайся.", inline=False)
-    await ctx.send(f"Хей, {member.mention}!")
-    await ctx.send(embed=embed_nah1)
-    await ctx.send(f"Гордитесь собой, вы элегантно послали {member.mention}", ephemeral=True)
+    if isinstance(ctx.channel, disnake.TextChannel):
+        embed_nah1 = disnake.Embed(
+            description=f"{ctx.author.mention} элегантно посылает тебя",
+            color=0x18f2b2,
+        )
+        embed_nah1.add_field(name="НАФИГ", value="Иди и не спотыкайся.", inline=False)
+        await ctx.send(f"Хей, {member.mention}!")
+        await ctx.send(embed=embed_nah1)
+        await ctx.send(f"Гордитесь собой, вы элегантно послали {member.mention}", ephemeral=True)
+    else:
+        # Если команда вызвана в личных сообщениях
+        await ctx.send("Эта команда работает только на сервере.", ephemeral=True)
