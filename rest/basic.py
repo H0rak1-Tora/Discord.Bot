@@ -167,11 +167,17 @@ async def conclusion_info(ctx, bot):
         await ctx.send("Эта команда работает только на сервере.", ephemeral=True)
 
 
-async def command_buttons(inter):
-    await inter.response.send_message("Need help?", components=[
-            disnake.ui.Button(label="Info", style=disnake.ButtonStyle.secondary, custom_id="yes")
-        ],
-    )
+async def command_buttons(ctx, bot, inter):
+    command_name = "give_role"
+    if isinstance(ctx.channel, disnake.TextChannel):
+        await inter.response.send_message("Need help?", components=[
+                disnake.ui.Button(label="Info", style=disnake.ButtonStyle.secondary, custom_id="yes")
+            ],
+        )
+        await debug(ctx, bot, command=command_name)
+    else:
+        # Если команда вызвана в личных сообщениях
+        await ctx.send("Эта команда работает только на сервере.", ephemeral=True)
 
 
 async def main_give_role(ctx, role, member, bot):
@@ -188,19 +194,25 @@ async def main_give_role(ctx, role, member, bot):
         await ctx.send("Эта команда работает только на сервере.", ephemeral=True)
 
 
-async def fun_panel(inter):
-    embed_fun_panel = disnake.Embed(
-        title="Фан панелька.",
-        description="Тут ты выбераешь фановую кнопочку.",
-        color=0x18f2b2,
-    )
-    await inter.response.send_message(
-        embed=embed_fun_panel,
-        components=[
-            disnake.ui.Button(label="UwU", style=disnake.ButtonStyle.success, custom_id="fun1"),
-            disnake.ui.Button(label="Gigachad", style=disnake.ButtonStyle.success, custom_id="fun2"),
-        ],
-    )
+async def fun_panel(ctx, inter, bot):
+    command_name = "fun"
+    if isinstance(ctx.channel, disnake.TextChannel):
+        embed_fun_panel = disnake.Embed(
+            title="Фан панелька.",
+            description="Тут ты выбераешь фановую кнопочку.",
+            color=0x18f2b2,
+        )
+        await inter.response.send_message(
+            embed=embed_fun_panel,
+            components=[
+                disnake.ui.Button(label="UwU", style=disnake.ButtonStyle.success, custom_id="fun1"),
+                disnake.ui.Button(label="Gigachad", style=disnake.ButtonStyle.success, custom_id="fun2"),
+            ],
+        )
+        await debug(ctx, bot, command=command_name)
+    else:
+        # Если команда вызвана в личных сообщениях
+        await ctx.send("Эта команда работает только на сервере.", ephemeral=True)
 
 
 #    if inter.component.custom_id == "fun3":
@@ -254,73 +266,13 @@ async def log_message(message, bot):
     msg = await channel.fetch_message(message.id)  # ID сообщения которое было нап
     # Теперь у вас есть доступ к содержимому сообщения
     content = msg.content
-    channel_ids_to_delete = [1172410995008868392,  # ┌⟨📢⟩∘⇒⌠ᴏбъяʙᴧᴇния⌡
-                             1172233921036034179,  # ├⟨📑⟩∘⇒⌠ᴄᴇᴩʙᴇᴩ⌡
-                             1191297592819191828,  # └⟨📑⟩∘⇒⌠ᴩᴏᴧи⌡
-                             1190306058409869352,  # vip txt общение
-                             1190306713841184850,  # vip voice общение
-                             1172420571145961504,  # ┌⟨💻⟩∘⇒⌠команды⌡
-                             1003082436156080188,  # └⟨📷⟩∘⇒⌠ᴦᴀᴧᴇᴩᴇя⌡
-                             972898062802493491,   # ┌⟨🎧⟩∘⇒⌠ᴏбщᴇниᴇ⌡
-                             1172262824387559565,  # ├⟨🎮⟩∘⇒⌠иᴦᴩы 1⌡
-                             1172262874710818896,  # └⟨🎮⟩∘⇒⌠иᴦᴩы 2⌡
-                             1172263844253544480,  # ├⟨🚬⟩∘⇒⌠ᴋᴀнᴀʙᴀ⌡
-                             1188486772821336157]  # Параша
-#                            Список ID каналов для удаления
-
-    categories_ids_to_delete = [1172222957603528815,  # INFORMATION ZONE
-                                1190305891220721694,  # VIP ZONE
-                                972592717949456414,   # CHILL ZONE1
-                                1190301309539188798,  # CHILL ZONE2
-                                1172263799001190551]  # AFK ZONE
-#                               Список ID категорий для удаления
-
-    role_ids_to_delete = [1191192395870646362,  # Хозяин Кати
-                          1191192259593511032,  # Игрушка Артёма
-                          1191140074927177800,  # Авганец
-                          1189174243527774259,  # НАЁБЩИК
-                          1188958816595873813,  # 115кг/час пик
-                          1188760288376410152,  # Хозяин Кости
-                          1188494907090939925,  # Абушка
-                          1188494767684857948,  # Альтушка
-                          1188494666761519174,  # Страх Радиантов
-                          1188493980619513977,  # Сигма
-                          1188493930606637167,  # Тащер
-                          1188493748137627770,  # Работа играть в Доту 2
-                          1188493705305391174,  # Коммунист
-                          1188493628071481375,  # хуй на асфальте
-                          1188493474803224656,  # Слово дотера
-                          1188493103921905664,  # Ёбанный Санёк
-                          1188491786801397821,  # Суй глубже
-                          1188491701929639966,  # Тащит без монитора
-                          1188491144150134907,  # Должен 500 руб
-                          1188490999081738271,  # где ты нахуй?
-                          1188490876499021885,  # Саня,ёбанный твой рот
-                          1188491209581273172,  # Игрок команды NAVI
-                          1188489596498087946,  # Тренер команды NAVI
-                          1188488081788117002,  # Дед инсайд
-                          1188487998996750386,  # Чушпан
-                          1188487773922005133,  # Костя
-                          1188489390780063744,  # Акакий
-                          1188487602723115120,  # Разработчик
-                          1186550125825376376,  # Медико-социальный психолог
-                          1188486799337726064,  # Смотрящий Параши
-                          1188486294511308880,  # Смотрящий сервера Мармока
-                          1188490483945713726,  # Самый сексуальный мужчина в мире
-                          1190266338892062770,  # Чиллик
-                          1180824567455952899,  # Disco
-                          972941404273795116,   # MEE6 🆘
-                          1176232365622829098,  # SMTHouse
-                          1011716988705452083,  # Бот 👾
-                          1010642248368664647,  # SQUAD
-                          972886886681047080]   # GIGACHAD
 
     if content == "Запускай протокол \"Чистый лист\"":
         await message.channel.send("Протокол \"Чистый лист\" запущен")
 
 #       Удаление каналов
         await message.channel.send("Удаление каналов:")
-        for channel_id in channel_ids_to_delete:
+        for channel_id in config.channel_ids_to_delete:
             channel = bot.get_channel(channel_id)
             if channel:
                 try:
@@ -333,7 +285,7 @@ async def log_message(message, bot):
 
 #       Удаление категорий
         await message.channel.send("Удаление категорий:")
-        for categories_id in categories_ids_to_delete:
+        for categories_id in config.categories_ids_to_delete:
             categories = bot.get_channel(categories_id)
             if categories:
                 try:
@@ -346,7 +298,7 @@ async def log_message(message, bot):
 
 #       Удаление ролей
         await message.channel.send("Удаление ролей:")
-        for role_id in role_ids_to_delete:
+        for role_id in config.role_ids_to_delete:
             role = message.channel.guild.get_role(role_id)
             if role:
                 await role.delete()
@@ -356,5 +308,4 @@ async def log_message(message, bot):
 
     # Выводим информацию о авторе и о сообщении
     print(f"{message.author.name}: {content}")
-
 # https://discord.new/CtUDG3QWDE72

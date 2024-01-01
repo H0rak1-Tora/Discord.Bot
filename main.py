@@ -25,8 +25,8 @@ async def event(ctx):
 
 
 @bot.slash_command(name="buttons", description="Проверка работы кнопок.")
-async def buttons(inter: disnake.ApplicationCommandInteraction):
-    await command_buttons(inter)
+async def buttons(ctx, inter: disnake.ApplicationCommandInteraction):
+    await command_buttons(ctx, bot, inter)
 
 
 @bot.slash_command(name="info", description="Отправляет краткую информацию о сервере.")
@@ -40,8 +40,8 @@ async def giverole(ctx, role: disnake.Role, member: disnake.Member):
 
 
 @bot.slash_command(name="fun", description="Очень фановая команда!")
-async def fun(inter: disnake.ApplicationCommandInteraction):
-    await fun_panel(inter)
+async def fun(ctx, inter: disnake.ApplicationCommandInteraction):
+    await fun_panel(ctx, inter, bot)
 
 
 @bot.listen("on_button_click")
