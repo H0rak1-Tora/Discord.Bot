@@ -3,10 +3,10 @@ import disnake
 from disnake.ext import commands
 from dotenv import dotenv_values
 from rest import config
+
 intents = disnake.Intents(messages=True, guilds=True)
 Intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
-
 config_dotenv = dotenv_values("secret.env")
 TOKEN = config_dotenv["SECRET_TOKEN"]
 
@@ -26,7 +26,7 @@ async def event(ctx):
 
 @bot.slash_command(name="buttons", description="Проверка работы кнопок.")
 async def buttons(inter: disnake.ApplicationCommandInteraction):
-    await command_buttons(bot, inter)
+    await command_buttons(inter)
 
 
 @bot.slash_command(name="info", description="Отправляет краткую информацию о сервере.")
@@ -35,13 +35,18 @@ async def info(ctx):
 
 
 @bot.slash_command()
+async def give_role(ctx, role: disnake.Role, member: disnake.Member):
+    await main_give_role(ctx, role, member, bot)
+
+
+@bot.slash_command()
 async def giverole(ctx, role: disnake.Role, member: disnake.Member):
     await main_give_role(ctx, role, member, bot)
 
 
 @bot.slash_command(name="fun", description="Очень фановая команда!")
-async def fun(ctx, inter: disnake.ApplicationCommandInteraction):
-    await fun_panel(ctx, inter, bot)
+async def fun(inter: disnake.ApplicationCommandInteraction):
+    await fun_panel(inter)
 
 
 @bot.listen("on_button_click")
