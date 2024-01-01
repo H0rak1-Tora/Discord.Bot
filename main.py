@@ -25,8 +25,8 @@ async def event(ctx):
 
 
 @bot.slash_command(name="buttons", description="Проверка работы кнопок.")
-async def buttons(ctx, inter: disnake.ApplicationCommandInteraction):
-    await command_buttons(ctx, bot, inter)
+async def buttons(inter: disnake.ApplicationCommandInteraction):
+    await command_buttons(bot, inter)
 
 
 @bot.slash_command(name="info", description="Отправляет краткую информацию о сервере.")
@@ -65,8 +65,8 @@ async def on_dropdown(inter):
 #     traceback.print_exc()
 
 
-@bot.listen("on_message")
-async def main_log_message(message):
+@bot.event
+async def on_message(message):
     await log_message(message, bot)
 
 

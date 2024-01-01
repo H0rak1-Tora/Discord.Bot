@@ -18,7 +18,20 @@ async def debug(ctx, bot, command):
         author_name = ctx.author.name
         guild_name = ctx.guild.name if ctx.guild else "Direct Message"
         channel_name = ctx.channel.name if ctx.guild else "Direct Message"
-        current_time = datetime.datetime.now().strftime("%m-%d-%Y %H:%M:%S")
+        current_time = datetime.datetime.now().strftime("%m.%d.%Y %H:%M:%S")
+        debug_info = (f"{current_time}: \"{guild_name}\"|{channel_name}|{author_name}|{command}|"
+                      f"Ping:{float(bot.latency * 1000)}ms")
+        print(debug_info)
+    else:
+        pass
+
+
+async def debug_inter(ctx, bot, command):
+    if config.debug:
+        author_name = ctx.author.name
+        guild_name = ctx.guild.name if ctx.guild else "Direct Message"
+        channel_name = ctx.channel.name if ctx.guild else "Direct Message"
+        current_time = datetime.datetime.now().strftime("%m.%d.%Y %H:%M:%S")
         debug_info = (f"{current_time}: \"{guild_name}\"|{channel_name}|{author_name}|{command}|"
                       f"Ping:{float(bot.latency * 1000)}ms")
         print(debug_info)
@@ -168,7 +181,7 @@ async def conclusion_info(ctx, bot):
 
 
 async def command_buttons(ctx, bot, inter):
-    command_name = "give_role"
+    command_name = "buttons"
     if isinstance(ctx.channel, disnake.TextChannel):
         await inter.response.send_message("Need help?", components=[
                 disnake.ui.Button(label="Info", style=disnake.ButtonStyle.secondary, custom_id="yes")
@@ -262,6 +275,9 @@ async def nah1(ctx, member, bot):
 
 async def log_message(message, bot):
     # Получаем информацию о сообщении
+    current_time = datetime.datetime.now().strftime("%m.%d.%Y %H:%M:%S")
+    guild_name = message.guild.name
+    channel_name = message.channel.name
     channel = bot.get_channel(message.channel.id)  # Здесь ID канала в котором было написано сообщение
     msg = await channel.fetch_message(message.id)  # ID сообщения которое было нап
     # Теперь у вас есть доступ к содержимому сообщения
@@ -307,5 +323,6 @@ async def log_message(message, bot):
                 await message.channel.send(f"Роль с ID {role_id} не найдена.")
 
     # Выводим информацию о авторе и о сообщении
-    print(f"{message.author.name}: {content}")
+    print(f"{current_time} \"{guild_name}\" {channel_name} {message.author.name}: {content}")
+    await bot.process_commands(message)
 # https://discord.new/CtUDG3QWDE72
