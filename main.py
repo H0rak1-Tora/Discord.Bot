@@ -35,7 +35,7 @@ async def info(ctx):
 
 
 @bot.slash_command()
-async def give_role(ctx, role: disnake.Role, member: disnake.Member):
+async def giverole(ctx, role: disnake.Role, member: disnake.Member):
     await main_give_role(ctx, role, member, bot)
 
 
@@ -63,6 +63,11 @@ async def on_dropdown(inter):
 # async def on_error():
 #     import traceback
 #     traceback.print_exc()
+
+
+@bot.listen("on_message")
+async def main_log_message(message):
+    await log_message(message, bot)
 
 
 bot.run(TOKEN)
