@@ -162,9 +162,9 @@ cython_debug/
 .idea/inspectionProfiles/profiles_settings.xml
 .idea/misc.xml
 .idea/vcs.xml
-photo/firework.png
-photo/list.png
+Discord.Bot/photo/firework.png
+Discord.Bot/photo/list.png
 *.env
-rest/config.py
+smthouse/config.py
 main.py.bat
 Discord.Bot/.idea/workspace.xml
