@@ -1,10 +1,10 @@
 import disnake
 from disnake.ext import commands
 
-# import smthouse
+import smthouse
 
 
-class FunPanel(commands.Cog):
+class FunCommands(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
@@ -22,9 +22,10 @@ class FunPanel(commands.Cog):
                 disnake.ui.Button(label="Gigachad", style=disnake.ButtonStyle.success, custom_id="fun2"),
             ],
         )
+        smthouse.tools.debug_inter(inter, self.bot, command="fun")
 
-    @commands.slash_command(name="nah", description="Элегантно посылает человека!")
-    async def nah(self, ctx, member: disnake.Member):
+    @commands.slash_command(name="nafig", description="Элегантно посылает человека!")
+    async def nafig(self, ctx, member: disnake.Member):
         if isinstance(ctx.channel, disnake.TextChannel):
             embed_nah1 = disnake.Embed(
                 description=f"{ctx.author.mention} элегантно посылает тебя",
@@ -34,11 +35,11 @@ class FunPanel(commands.Cog):
             await ctx.send(f"Хей, {member.mention}!")
             await ctx.send(embed=embed_nah1)
             await ctx.send(f"Гордитесь собой, вы элегантно послали {member.mention}", ephemeral=True)
-#            await debug(ctx, bot, command="nah")
+            smthouse.tools.debug(ctx, self.bot, command="nafig")
         else:
             # Если команда вызвана в личных сообщениях
             await ctx.send("Эта команда работает только на сервере.", ephemeral=True)
 
 
 def setup(bot: commands.Bot):
-    bot.add_cog(FunPanel(bot))
+    bot.add_cog(FunCommands(bot))

@@ -1,6 +1,8 @@
 import disnake
 from disnake.ext import commands
 
+import smthouse
+
 
 class CreateEvent(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -27,7 +29,7 @@ class CreateEvent(commands.Cog):
                 color=0x18f2b2,
             )
             await ctx.send(embed=embed_test, view=view)
-            # await debug(ctx, bot, command="create_event")
+            smthouse.tools.debug(ctx, self.bot, command="create_event")
 
 
 def setup(bot: commands.Bot):

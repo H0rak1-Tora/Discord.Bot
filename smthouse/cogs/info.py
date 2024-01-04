@@ -1,7 +1,7 @@
 import disnake
 from disnake.ext import commands
 
-# import smthouse
+import smthouse
 
 
 class ServerInformation(commands.Cog):
@@ -23,7 +23,7 @@ class ServerInformation(commands.Cog):
             embed_info.add_field(name='Встроенный заголовок', value="Встроенное значение", inline=True)
             embed_info.add_field(name="Встроенный заголовок", value="Встроенное значение", inline=True)
             await ctx.send(embed=embed_info)
-#            await debug(ctx, bot, command="info")
+            smthouse.tools.debug(ctx, self.bot, command="info")
         else:
             # Если команда вызвана в личных сообщениях
             await ctx.send("Эта команда работает только на сервере.", ephemeral=True)

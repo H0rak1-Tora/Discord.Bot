@@ -26,7 +26,7 @@ class DropdownEvent(commands.Cog):
             channel = guild.get_channel(smthouse.config.channel3)
             await smthouse.сomponents.modal.event_modal(inter, channel)
 
-        # async for message in inter.author.history(limit=None):
+        # async for message in inter.author.history(limit=1):
         #     try:
         #         await message.delete()
         #     except disnake.NotFound:

@@ -1,7 +1,7 @@
 import disnake
 from disnake.ext import commands
 
-# import smthouse
+import smthouse
 
 
 class Role(commands.Cog):
@@ -16,7 +16,7 @@ class Role(commands.Cog):
                 await ctx.send(f'{member.mention}, Вы получили роль {role.name}')
             except disnake.Forbidden:
                 await ctx.send("У меня нет прав для выдачи этой роли.")
-            # await debug(ctx, bot, command="give_role")
+            smthouse.tools.debug(ctx, self.bot, command="giverole")
         else:
             # Если команда вызвана в личных сообщениях
             await ctx.send("Эта команда работает только на сервере.", ephemeral=True)
