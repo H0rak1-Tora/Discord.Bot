@@ -20,6 +20,10 @@ class Role(commands.Cog):
         else:
             # Если команда вызвана в личных сообщениях
             await ctx.send("Эта команда работает только на сервере.", ephemeral=True)
+        print(member.mention)
+        print(member.name)
+        print(member.id)
+        print(member)
 
 
 def setup(bot: commands.Bot):

@@ -1,12 +1,14 @@
-import smthouse
+# import disnake
 from disnake.ext import commands
+
+import smthouse
 
 
 class DropdownEvent(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @commands.Cog.listener()
+    @commands.Cog.listener
     async def on_dropdown(self, inter):
         # Получение значения, выбранного в меню
         selected_value = inter.data['values'][0]
@@ -26,7 +28,7 @@ class DropdownEvent(commands.Cog):
             channel = guild.get_channel(smthouse.config.channel3)
             await smthouse.сomponents.modal.event_modal(inter, channel)
 
-        # async for message in inter.author.history(limit=1):
+        # async for message in inter.author.history(limit=None):
         #     try:
         #         await message.delete()
         #     except disnake.NotFound:
